@@ -46,7 +46,7 @@ export default function Page() {
     <main>
       <header className="site-header">
         <div className="wrap nav">
-          <a href="#top" className="brand" aria-label="GeoPesa home"><span className="brand-mark">G</span><span>GEOPESA<small>FINANCIAL SERVICES GROUP</small></span></a>
+          <a href="#top" className="brand" aria-label="GeoPesa home"><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-jw2E1ccfqz0dgKbDWBi3Njfw1OcuEa.png" alt="GeoPesa Financial Services Group" /></a>
           <nav className={menuOpen ? 'nav-links mobile-open' : 'nav-links'} aria-label="Primary navigation">
             {navItems.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
             <a className="nav-cta" href="#investors" onClick={() => setMenuOpen(false)}>Contact Investment Team <ArrowUpRight size={15} /></a>
@@ -82,7 +82,7 @@ export default function Page() {
 
       <section className="investor-cta" id="investors"><div className="wrap cta-inner"><div><p className="kicker">Investor portal</p><h2>Capital that moves<br /><em>with purpose.</em></h2></div><div><p>This overview is prepared for qualified institutional investors and development finance institutions. Request the full memorandum and data room access from the investment team.</p><a className="button button-gold" href="mailto:invest@geopesa.example">Request investor access <ArrowUpRight size={17} /></a></div></div></section>
 
-      <footer><div className="wrap footer-top"><a href="#top" className="brand"><span className="brand-mark">G</span><span>GEOPESA<small>FINANCIAL SERVICES GROUP</small></span></a><p>A Mauritius-domiciled, FSC-regulated diversified financial conglomerate serving Africa&apos;s MSME, wealth and protection needs.</p><div className="footer-links">{['Group', 'Pillars', 'Investors'].map((title) => <div key={title}><b>{title}</b><a href={title === 'Group' ? '#overview' : title === 'Pillars' ? '#pillars' : '#investors'}>{title === 'Group' ? 'Executive Overview' : title === 'Pillars' ? 'Three-pillar model' : 'Investor Portal'}</a><a href="#governance">Mauritius Platform</a></div>)}</div></div><div className="wrap footer-bottom"><span>© 2026 GeoPesa Financial Services Group Ltd. All rights reserved.</span><span>Mauritius GBC · FSC Regulated</span></div></footer>
+      <footer><div className="wrap footer-top"><a href="#top" className="brand" aria-label="GeoPesa home"><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-jw2E1ccfqz0dgKbDWBi3Njfw1OcuEa.png" alt="GeoPesa Financial Services Group" /></a><p>A Mauritius-domiciled, FSC-regulated diversified financial conglomerate serving Africa&apos;s MSME, wealth and protection needs.</p><div className="footer-links">{['Group', 'Pillars', 'Investors'].map((title) => <div key={title}><b>{title}</b><a href={title === 'Group' ? '#overview' : title === 'Pillars' ? '#pillars' : '#investors'}>{title === 'Group' ? 'Executive Overview' : title === 'Pillars' ? 'Three-pillar model' : 'Investor Portal'}</a><a href="#governance">Mauritius Platform</a></div>)}</div></div><div className="wrap footer-bottom"><span>© 2026 GeoPesa Financial Services Group Ltd. All rights reserved.</span><span>Mauritius GBC · FSC Regulated</span></div></footer>
     </main>
   )
 }
