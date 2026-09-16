@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { ArrowUpRight, CalendarClock, ChevronDown, Mail, MapPin, Menu, Phone, ShieldCheck, X } from 'lucide-react'
 import BorderGlow from '@/components/border-glow'
 import AeroShards from '@/components/aero-shards'
-import FoldText from '@/components/fold-text'
 
 const navItems = [
   ['Group', '#overview'],
@@ -93,7 +92,7 @@ export default function Page() {
             <div className="hero-stamp"><ShieldCheck size={18} /> Investor-grade<br />governance</div>
           </div>
         </div>
-        <div className="hero-ticker"><div className="wrap ticker-grid"><div><FoldText text="$300M" splitBy="char" hinge="top" /><span>Target financing capacity</span></div><div><FoldText text="14–17%" splitBy="char" hinge="top" /><span>Target net yield to investors</span></div><div><FoldText text="3" splitBy="char" hinge="top" /><span>Core business pillars</span></div><div><FoldText text="6+" splitBy="char" hinge="top" /><span>Countries of deployment</span></div></div></div>
+        <div className="hero-ticker"><div className="wrap ticker-grid"><div><b>$300M</b><span>Target financing capacity</span></div><div><b>14–17%</b><span>Target net yield to investors</span></div><div><b>3</b><span>Core business pillars</span></div><div><b>6+</b><span>Countries of deployment</span></div></div></div>
       </section>
 
       <section className="section overview" id="overview"><div className="wrap two-col"><Reveal><p className="kicker">Strategic fit</p><h2>A structure built for the gap it&apos;s filling.</h2></Reveal><Reveal className="section-lede"><p>Africa&apos;s MSME sector faces an estimated <strong>$416B annual credit gap.</strong> GeoPesa is not seeking a banking licence — it operates as a non-bank financial institution licensed under FSC Mauritius, avoiding the capital-intensive requirements of full banking regulation while meeting the governance bar international investors expect.</p><p>The Mauritius holding structure gives the group tax efficiency, DFI credibility and investor-grade oversight, with three pillars designed to cross-sell into the same client base.</p></Reveal></div></section>
