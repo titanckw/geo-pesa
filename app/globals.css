@@ -8,6 +8,13 @@
 .pillar-panel-glow{margin-top:28px}.pillars-section{position:relative;isolation:isolate;overflow:hidden}.pillars-content{position:relative;z-index:1}.soft-aurora{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:linear-gradient(135deg,rgba(252,251,247,.98),rgba(247,244,236,.9))}.soft-aurora span{position:absolute;width:65%;height:48%;border-radius:50%;filter:blur(70px);opacity:.24;animation:aurora-drift 12s ease-in-out infinite alternate}.soft-aurora span:nth-child(1){left:-12%;top:8%;background:#6E8B6B}.soft-aurora span:nth-child(2){right:-10%;top:28%;background:#C9A868;animation-delay:-4s}.soft-aurora span:nth-child(3){left:24%;bottom:-18%;background:#6B7A93;animation-delay:-7s}.specular-button,.button,.nav-cta{position:relative;overflow:hidden;isolation:isolate;box-shadow:0 0 0 1px rgba(201,168,104,.5),0 8px 24px rgba(11,22,38,.18);transition:transform .2s ease,box-shadow .2s ease}.specular-button::before,.button::before,.nav-cta::before{content:'';position:absolute;inset:1px;border-radius:inherit;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.5) 45%,transparent 65%);transform:translateX(-130%);transition:transform .55s ease;z-index:-1}.specular-button:hover,.button:hover,.nav-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--gold),0 0 24px rgba(201,168,104,.4),0 12px 28px rgba(11,22,38,.22)}.specular-button:hover::before,.button:hover::before,.nav-cta:hover::before{transform:translateX(130%)}.specular-button{border:0;cursor:pointer}.specular-button-shine{display:none}.specular-button-label{position:relative;z-index:1}@keyframes aurora-drift{to{transform:translate(7%,12%) scale(1.12)}}.pillar-panel-glow{margin-top:28px}.contact-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 28px;margin-top:24px;padding-top:18px;border-top:1px solid rgba(201,168,104,.35);color:#d8d2c6;font-size:13px;line-height:1.65}.contact-summary span{position:relative;display:flex;flex-direction:column;align-items:flex-start;min-width:0;min-height:74px;padding-left:28px}.contact-summary span>svg{position:absolute;left:0;top:2px;color:var(--gold)}.contact-summary b{display:block;margin-bottom:4px;color:var(--gold);font-size:10px;letter-spacing:.14em;text-transform:uppercase}.contact-summary a{color:#d8d2c6;transition:color .2s ease}.contact-summary a:hover{color:var(--gold)}@media(max-width:800px){.contact-summary{grid-template-columns:1fr;gap:16px}.contact-summary span{min-height:0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{transition:none}.aero-shard{animation:none!important}}
 
+/* Let the interactive shard field become the hero atmosphere, not just a visual card. */
+.hero{position:relative}
+.hero-grid{position:static}
+.hero-visual{position:static}
+.hero-shards{position:absolute!important;inset:0!important;width:100%;height:100%;z-index:0;pointer-events:auto}
+.hero-copy,.signal-card,.hero-stamp{position:relative;z-index:2}
+
 /* Interactive governance credential panel */
 .ring{transition:transform .35s ease,box-shadow .35s ease}
 .ring:hover{transform:scale(1.025);box-shadow:0 0 0 8px rgba(169,129,63,.08),0 0 32px rgba(201,168,104,.22)}
@@ -17,6 +24,13 @@
 .badges button:hover,.badges button.active{background:var(--navy-2);border-color:var(--gold);color:var(--paper-raised);transform:translateY(-2px)}
 .governance-hint{margin:14px 0 0;text-align:center;color:var(--steel);font-size:12px;line-height:1.5}
 @media(max-width:800px){.ring div{padding:0 36px}}
+
+/* Full-bleed interactive atmosphere for the hero section. */
+.hero{position:relative}
+.hero-grid{position:static}
+.hero-visual{position:static!important}
+.hero-shards{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0!important;pointer-events:auto}
+.hero-copy,.signal-card,.hero-stamp{position:relative;z-index:2}
 
 /* Keep the active governance credential readable inside a calmer card shape. */
 .governance-aside .ring{width:min(100%,470px);height:auto;min-height:190px;margin:0 auto;border:1px solid rgba(201,168,104,.72);border-radius:24px;background:linear-gradient(145deg,rgba(252,251,247,.98),rgba(247,244,236,.92));box-shadow:0 18px 42px rgba(11,22,38,.12),inset 0 0 0 8px rgba(201,168,104,.08);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
