@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, CalendarClock, ChevronDown, Mail, MapPin, Menu, Phone, ShieldCheck, X } from 'lucide-react'
 import BorderGlow from '@/components/border-glow'
-import ScrollExpand from '@/components/scroll-expand'
+import AeroShards from '@/components/aero-shards'
 
 const navItems = [
   ['Group', '#overview'],
@@ -79,7 +79,7 @@ export default function Page() {
             <div className="hero-actions"><a className="button button-light" href="#investors">Contact Investment Team <ArrowUpRight size={17} /></a><a className="text-link" href="#overview">Read the strategic overview <span>↓</span></a></div>
           </div>
           <div className="hero-visual reveal is-visible">
-            <ScrollExpand className="hero-shards" scrollHint="Scroll to explore" startWidth={74} startHeight={76} mediaZoom={1.12} />
+            <AeroShards className="hero-shards" backgroundColor="#0B1626" shardColor="#A9813F" accentColor="#C9A868" />
             <div className="signal-card"><span>GEOPESA / 01</span><strong>Deploying capital<br />with conviction.</strong><div className="signal-line"><i /> <small>Pan-African platform</small></div></div>
             <div className="hero-stamp"><ShieldCheck size={18} /> Investor-grade<br />governance</div>
           </div>
