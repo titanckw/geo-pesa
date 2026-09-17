@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { ArrowUpRight, CalendarClock, ChevronDown, Mail, MapPin, Menu, Phone, ShieldCheck, X } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { ArrowUpRight, CalendarClock, Check, ChevronDown, Mail, MapPin, Menu, Phone, ShieldCheck, X } from 'lucide-react'
 import BorderGlow from '@/components/border-glow'
 import AeroShards from '@/components/aero-shards'
 
@@ -32,8 +32,36 @@ function Reveal({ children, className = '' }: { children: React.ReactNode; class
   return <div className={`reveal ${className}`}>{children}</div>
 }
 
+const contactSteps = ['Intent', 'Organization', 'Discussion', 'Questions', 'Details']
+
+function ContactFormModal({ onClose }: { onClose: () => void }) {
+  const [step, setStep] = useState(1)
+  const [submitted, setSubmitted] = useState(false)
+  const [form, setForm] = useState({ intent: '', organization: '', type: '', country: '', discussion: '', ticket: '', questions: '', name: '', email: '', phone: '', method: 'Email' })
+  const update = (key: keyof typeof form, value: string) => setForm((current) => ({ ...current, [key]: value }))
+  const hasData = Object.values(form).some(Boolean)
+  const canContinue = step === 1 ? Boolean(form.intent) : step === 2 ? Boolean(form.organization && form.country) : true
+  const close = () => { if (hasData && !submitted && !window.confirm('Discard this form?')) return; onClose() }
+  const next = () => { if (!canContinue) return; if (step === 5) { if (!form.name || !form.email) return; console.log('[v0] GeoPesa contact form submitted:', form); setSubmitted(true) } else setStep(step + 1) }
+  const choices = ['I’m looking to invest / deploy capital', 'I represent a DFI or institutional partner', 'I’m a potential borrower / portfolio company', 'Press or media', 'Something else']
+  return <div className="contact-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && close()}><div className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+    <button className="modal-close" onClick={close} aria-label="Close contact form"><X size={20} /></button>
+    {submitted ? <div className="contact-success"><span className="success-icon"><Check size={28} /></span><p className="kicker">Message received</p><h2>Thanks — we&apos;ll be in touch within 1 business day.</h2><button className="button button-gold" onClick={onClose}>Close</button></div> : <>
+      <div className="stepper-head"><p className="kicker">Talk to GeoPesa</p><h2 id="contact-title">Start a conversation.</h2><span>Step {step} of 5</span></div><div className="stepper-indicators" aria-label={`Step ${step} of 5`}>{contactSteps.map((label, index) => <React.Fragment key={label}><div className={step === index + 1 ? 'step-dot active' : step > index + 1 ? 'step-dot complete' : 'step-dot'}>{step > index + 1 ? <Check size={13} /> : index + 1}</div>{index < 4 && <i className={step > index + 1 ? 'complete' : ''} />}</React.Fragment>)}</div>
+      <div className="stepper-content">
+        {step === 1 && <><h3>What brings you here?</h3><p className="form-hint">Choose the option that best describes your interest.</p><div className="choice-grid">{choices.map((choice) => <button key={choice} className={form.intent === choice ? 'choice-card selected' : 'choice-card'} onClick={() => update('intent', choice)}>{choice}<ArrowUpRight size={15} /></button>)}</div></>}
+        {step === 2 && <><h3>About your organization</h3><p className="form-hint">Tell us a little about the institution you represent.</p><label>Organization name<input value={form.organization} onChange={(e) => update('organization', e.target.value)} placeholder="e.g. Acme Capital" /></label><div className="form-grid"><label>Organization type<select value={form.type} onChange={(e) => update('type', e.target.value)}><option value="">Select type</option>{['Institutional investor', 'Development finance institution', 'Family office', 'Corporate/MSME', 'Media', 'Other'].map((item) => <option key={item}>{item}</option>)}</select></label><label>Country<input value={form.country} onChange={(e) => update('country', e.target.value)} placeholder="Country" /></label></div></>}
+        {step === 3 && <><h3>What would you like to discuss?</h3><label>Tell us briefly what you&apos;re looking to explore with GeoPesa<textarea value={form.discussion} onChange={(e) => update('discussion', e.target.value)} placeholder="Share a little about your objectives..." /></label><label>Indicative ticket size <select value={form.ticket} onChange={(e) => update('ticket', e.target.value)}><option value="">Prefer not to say</option>{['Under $1M', '$1M–$10M', '$10M–$50M', '$50M+'].map((item) => <option key={item}>{item}</option>)}</select></label></>}
+        {step === 4 && <><h3>Any questions for us?</h3><label>Anything you&apos;d like us to be ready to answer on our first call?<textarea value={form.questions} onChange={(e) => update('questions', e.target.value)} placeholder="Optional" /></label></>}
+        {step === 5 && <><h3>Your details</h3><p className="form-hint">How should our investment team reach you?</p><div className="form-grid"><label>Full name<input value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Your name" /></label><label>Email<input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="you@company.com" /></label></div><div className="form-grid"><label>Phone (optional)<input value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder="+254..." /></label><label>Preferred contact method<select value={form.method} onChange={(e) => update('method', e.target.value)}>{['Email', 'Phone call', 'WhatsApp'].map((item) => <option key={item}>{item}</option>)}</select></label></div></>}
+      </div><div className="stepper-actions">{step > 1 && <button className="text-button" onClick={() => setStep(step - 1)}>Back</button>}<button className="button button-gold" onClick={next} disabled={!canContinue || (step === 5 && (!form.name || !form.email))}>{step === 5 ? 'Submit' : 'Continue'} <ArrowUpRight size={16} /></button></div>
+    </>}
+  </div></div>
+}
+
 export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [contactOpen, setContactOpen] = useState(false)
   const [activePillar, setActivePillar] = useState('credit')
   const [expandedGov, setExpandedGov] = useState(0)
   const [governanceFocus, setGovernanceFocus] = useState(0)
@@ -72,7 +100,7 @@ export default function Page() {
           <a href="#top" className="brand" aria-label="GeoPesa home"><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-jw2E1ccfqz0dgKbDWBi3Njfw1OcuEa.png" alt="GeoPesa Financial Services Group" /></a>
           <nav className={menuOpen ? 'nav-links mobile-open' : 'nav-links'} aria-label="Primary navigation">
             {navItems.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
-            <a className="nav-cta" href="#investors" onClick={() => setMenuOpen(false)}>Contact Investment Team <ArrowUpRight size={15} /></a>
+            <a className="nav-cta" href="#investors" onClick={() => setMenuOpen(false)}>Contact Investment Team <ArrowUpRight size={15} /></a><button className="nav-talk" onClick={() => { setContactOpen(true); setMenuOpen(false) }}>Talk to us <ArrowUpRight size={15} /></button>
           </nav>
           <button className="menu-button" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
         </div>
@@ -106,6 +134,7 @@ export default function Page() {
       <section className="investor-cta" id="investors"><div className="wrap cta-inner"><div><p className="kicker">Investor portal</p><h2>Capital that moves<br /><em>with purpose.</em></h2></div><div><p>This overview is prepared for qualified institutional investors and development finance institutions. Request the full memorandum and data room access from the investment team.</p><a className="button button-gold" href="mailto:geopesa2015@gmail.com">Request investor access <ArrowUpRight size={17} /></a><div className="contact-summary" aria-label="GeoPesa contact details"><span><Phone size={16} aria-hidden="true" /><b>Phone</b><a href="tel:+254202100366">+254 20 2100366</a><a href="tel:+254716080871">+254 716 080871</a></span><span><Mail size={16} aria-hidden="true" /><b>Email</b><a href="mailto:geopesa2015@gmail.com">geopesa2015@gmail.com</a></span><span><CalendarClock size={16} aria-hidden="true" /><b>Business hours</b>Monday–Friday 8am–4pm<br />Saturday 8am–12pm</span><span><MapPin size={16} aria-hidden="true" /><b>Postal address</b>P.O. Box 8846 - 00200<br />Nairobi, Kenya</span></div></div></div></section>
 
       <footer><div className="wrap footer-top"><a href="#top" className="brand" aria-label="GeoPesa home"><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-jw2E1ccfqz0dgKbDWBi3Njfw1OcuEa.png" alt="GeoPesa Financial Services Group" /></a><p>A Mauritius-domiciled, FSC-regulated diversified financial conglomerate serving Africa&apos;s MSME, wealth and protection needs.</p><div className="footer-links"><div><b>Group</b><a href="#overview">Executive Overview</a><a href="#governance">Governance Framework</a></div><div><b>Pillars</b><a href="#pillars">Three-pillar Model</a><a href="#footprint">Pan-African Footprint</a></div><div><b>Investors</b><a href="#investors">Investor Portal</a><a href="mailto:geopesa2015@gmail.com">Contact Investment Team</a></div></div></div><div className="wrap footer-bottom"><span>© 2026 GeoPesa Financial Services Group Ltd. All rights reserved.</span><span>Mauritius GBC · FSC Regulated</span></div></footer>
+      {contactOpen && <ContactFormModal onClose={() => setContactOpen(false)} />}
     </main>
   )
 }
