@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
 
 const recipient = 'info@geo-pesa.com'
+const sender = 'info@geo-pesa.com'
 
 export async function POST(request: Request) {
   try {
@@ -11,10 +12,15 @@ export async function POST(request: Request) {
       return Response.json({ error: 'Name and a valid email are required.' }, { status: 400 })
     }
 
+    if (!process.env.RESEND_API_KEY) {
+      console.error('[v0] Contact email failed: RESEND_API_KEY is not configured')
+      return Response.json({ error: 'Unable to send your message right now.' }, { status: 503 })
+    }
+
     const resend = new Resend(process.env.RESEND_API_KEY)
-    const { error } = await resend.emails.send(
+    const { data, error } = await resend.emails.send(
       {
-        from: `GeoPesa Website <${process.env.RESEND_EMAIL_DOMAIN ? `forms@${process.env.RESEND_EMAIL_DOMAIN}` : 'onboarding@resend.dev'}>`,
+        from: `GeoPesa Website <${sender}>`,
         to: [recipient],
         replyTo: email.trim(),
         subject: `New GeoPesa enquiry from ${name.trim()}`,
