@@ -37,12 +37,30 @@ const contactSteps = ['Intent', 'Organization', 'Discussion', 'Questions', 'Deta
 function ContactFormModal({ onClose }: { onClose: () => void }) {
   const [step, setStep] = useState(1)
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({ intent: '', organization: '', type: '', country: '', discussion: '', ticket: '', questions: '', name: '', email: '', phone: '', method: 'Email' })
   const update = (key: keyof typeof form, value: string) => setForm((current) => ({ ...current, [key]: value }))
   const hasData = Object.values(form).some(Boolean)
   const canContinue = step === 1 ? Boolean(form.intent) : step === 2 ? Boolean(form.organization && form.country) : true
   const close = () => { if (hasData && !submitted && !window.confirm('Discard this form?')) return; onClose() }
-  const next = () => { if (!canContinue) return; if (step === 5) { if (!form.name || !form.email) return; console.log('[v0] GeoPesa contact form submitted:', form); setSubmitted(true) } else setStep(step + 1) }
+  const next = async () => {
+    if (!canContinue || sending) return
+    if (step === 5) {
+      if (!form.name || !form.email) return
+      setSending(true)
+      setError('')
+      try {
+        const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+        if (!response.ok) throw new Error('Unable to send')
+        setSubmitted(true)
+      } catch {
+        setError('We could not send your message. Please try again or email info@geo-pesa.com directly.')
+      } finally {
+        setSending(false)
+      }
+    } else setStep(step + 1)
+  }
   const choices = ['I’m looking to invest / deploy capital', 'I represent a DFI or institutional partner', 'I’m a potential borrower / portfolio company', 'Press or media', 'Something else']
   return <div className="contact-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && close()}><div className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-title">
     <button className="modal-close" onClick={close} aria-label="Close contact form"><X size={20} /></button>
@@ -54,7 +72,7 @@ function ContactFormModal({ onClose }: { onClose: () => void }) {
         {step === 3 && <><h3>What would you like to discuss?</h3><label>Tell us briefly what you&apos;re looking to explore with GeoPesa<textarea value={form.discussion} onChange={(e) => update('discussion', e.target.value)} placeholder="Share a little about your objectives..." /></label><label>Indicative ticket size <select value={form.ticket} onChange={(e) => update('ticket', e.target.value)}><option value="">Prefer not to say</option>{['Under $1M', '$1M–$10M', '$10M–$50M', '$50M+'].map((item) => <option key={item}>{item}</option>)}</select></label></>}
         {step === 4 && <><h3>Any questions for us?</h3><label>Anything you&apos;d like us to be ready to answer on our first call?<textarea value={form.questions} onChange={(e) => update('questions', e.target.value)} placeholder="Optional" /></label></>}
         {step === 5 && <><h3>Your details</h3><p className="form-hint">How should our investment team reach you?</p><div className="form-grid"><label>Full name<input value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Your name" /></label><label>Email<input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="you@company.com" /></label></div><div className="form-grid"><label>Phone (optional)<input value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder="+254..." /></label><label>Preferred contact method<select value={form.method} onChange={(e) => update('method', e.target.value)}>{['Email', 'Phone call', 'WhatsApp'].map((item) => <option key={item}>{item}</option>)}</select></label></div></>}
-      </div><div className="stepper-actions">{step > 1 && <button className="text-button" onClick={() => setStep(step - 1)}>Back</button>}<button className="button button-gold" onClick={next} disabled={!canContinue || (step === 5 && (!form.name || !form.email))}>{step === 5 ? 'Submit' : 'Continue'} <ArrowUpRight size={16} /></button></div>
+      </div>{error && <p className="form-error" role="alert">{error}</p>}<div className="stepper-actions">{step > 1 && <button className="text-button" onClick={() => setStep(step - 1)}>Back</button>}<button className="button button-gold" onClick={next} disabled={!canContinue || sending || (step === 5 && (!form.name || !form.email))}>{sending ? 'Sending…' : step === 5 ? 'Submit' : 'Continue'} <ArrowUpRight size={16} /></button></div>
     </>}
   </div></div>
 }
